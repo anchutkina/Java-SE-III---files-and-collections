@@ -1,6 +1,7 @@
 package org.example;
 
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -68,4 +69,5 @@ public class Game {
                 ", genres=" + genres.toString() +
                 '}';
     }
+
 }

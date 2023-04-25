@@ -3,20 +3,16 @@ package org.example;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Main {
+    private static List<Game> gameStorage = new ArrayList<>();
     public static void main(String[] args) {
-        List<Game> gameStorage = getGameList();
-        for(Game game : gameStorage) {
-            System.out.println(game);
-        }
+        gameStorage = getGameList();
+        saveGenresToFile();
     }
 
     private static List<Game> getGameList() {
-        List<Game> gameStorage = new ArrayList<>();
         Path pathToFile = Path.of("src", "main", "resources", "games.csv");
         try {
 
@@ -65,6 +61,39 @@ public class Main {
                 return null;
             }
         }
+
+        private static void saveGenresToFile() {
+            Path pathToFile = Path.of("src", "main", "resources", "game_genres.txt");
+            try {
+                FileWriter genresFile = new FileWriter(pathToFile.toFile());
+                BufferedWriter genresWriter = new BufferedWriter(genresFile);
+                for(String genres : getGenresList()) {
+                    genresWriter.write(genres + ", ");
+                }
+                genresWriter.close();
+                System.out.println("File game_genres.txt is successfully written.");
+
+            } catch(IOException |RuntimeException f) {
+                f.printStackTrace();
+            }
+        }
+
+        private static Set<String> getGenresList(){
+            //list of all game genres from the input file, sorted alphabetically and containing only unique values.
+            Set<String> individualGenre = new TreeSet<>();
+            for(Game game : gameStorage) {
+                List<String> genres = game.getGenres();
+                if(!genres.isEmpty()) {
+                    genres.remove(0);
+                } else {
+                    System.out.println("There are not any genres to work with.");
+                }
+
+                individualGenre.addAll(genres);
+            }
+            return individualGenre;
+        }
+
 
 
     }
