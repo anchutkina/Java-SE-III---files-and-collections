@@ -14,6 +14,7 @@ public class Main {
         gameStorage = getGameList();
         saveGenresToFile();
         saveSimulatorGameToFile();
+        savePublishersToFile();
     }
 
     private static List<Game> getGameList() {
@@ -111,6 +112,7 @@ public class Main {
             try {
                 Path pathToFile = Path.of("src", "main", "resources", "simulator_games.csv");
                 FileWriter writer = new FileWriter(pathToFile.toFile());
+                writer.write("Name,Released Date\n");
                 for(Game game: simulatorGame) {
                     writer.write(game.getName() + COMMA + game.getReleaseDate() + "\n");
                 }
@@ -123,7 +125,39 @@ public class Main {
             }
         }
 
+        private static void savePublishersToFile() {
+            Map<String, Integer> publisherCounter = new HashMap<>();
+            for(Game game: gameStorage) {
+                for(String publisher : game.getPublisher()) {
+                    publisherCounter.put(publisher, publisherCounter.getOrDefault(publisher, 0) + 1);
+                }
+            }
 
+            List<Map.Entry<String,Integer>> publishers = new ArrayList<>(publisherCounter.entrySet());
+            publishers.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+            try {
+                Path pathToFile = Path.of("src", "main", "resources", "game_publishers.csv");
+                BufferedWriter writer = Files.newBufferedWriter(pathToFile);
+                writer.write("Publisher,Count_of_game\n");
+                for(Map.Entry<String,Integer> publisher : publishers) {
+                    String publisherName = publisher.getKey();
+                    if(publisherName.isEmpty()) {
+                        publisherName = "Publishers without a name";
+                    }
+                    writer.write(publisherName + COMMA + publisher.getValue() + "\n");
+                }
+
+                writer.close();
+                System.out.println("File game_publishers.csv was written successfully.");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
 
 
 
