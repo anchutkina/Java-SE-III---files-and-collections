@@ -9,6 +9,7 @@ public class Main {
     private static List<Game> gameStorage = new ArrayList<>();
     private static final String COMMA = ",";
     private static final String COMMA_SPACE = ", ";
+    private static final String SIMULATOR = "Simulator";
 
     public static void main(String[] args) {
         gameStorage = getGameList();
@@ -67,7 +68,7 @@ public class Main {
 
         private static void saveGenresToFile() {
             //list of all game genres from the input file, sorted alphabetically and containing only unique values.
-            Set<String> individualGenre = new TreeSet<>();
+            TreeSet<String> uniqueGenre = new TreeSet<>();
             for(Game game : gameStorage) {
                 List<String> genres = game.getGenres();
                 if(!genres.isEmpty()) {
@@ -76,14 +77,19 @@ public class Main {
                     System.out.println("There are not any genres to work with.");
                 }
 
-                individualGenre.addAll(genres);
+                uniqueGenre.addAll(genres);
             }
+
 
             try {
                 Path pathToFile = Path.of("src", "main", "resources", "game_genres.txt");
                 FileWriter genresWriter = new FileWriter(pathToFile.toFile());
-                for(String genres : individualGenre) {
-                    genresWriter.write(genres + COMMA);
+                for(String genre : uniqueGenre) {
+                    if(!genre.equals(uniqueGenre.last())) {
+                        genresWriter.write(genre + COMMA);
+                    } else {
+                        genresWriter.write(genre);
+                    }
                 }
                 genresWriter.close();
                 System.out.println("File game_genres.txt was written successfully.");
@@ -96,13 +102,13 @@ public class Main {
 
         private static void saveSimulatorGameToFile() {
 
-                List<Game> simulatorGame = new ArrayList<>();
+                List<Game> simulatorGames = new ArrayList<>();
                 for(Game game : gameStorage) {
-                    if(game.getGenres().contains("Simulator")) {
-                        simulatorGame.add(game);
+                    if(game.getGenres().contains(SIMULATOR)) {
+                        simulatorGames.add(game);
                     }
                 }
-                simulatorGame.sort(new Comparator<Game>() {
+                simulatorGames.sort(new Comparator<Game>() {
                     @Override
                     public int compare(Game game1, Game game2) {
                         return game1.getReleaseDate().compareTo(game2.getReleaseDate());
@@ -113,7 +119,7 @@ public class Main {
                 Path pathToFile = Path.of("src", "main", "resources", "simulator_games.csv");
                 FileWriter writer = new FileWriter(pathToFile.toFile());
                 writer.write("Name,Released Date\n");
-                for(Game game: simulatorGame) {
+                for(Game game: simulatorGames) {
                     writer.write(game.getName() + COMMA + game.getReleaseDate() + "\n");
                 }
 
@@ -126,20 +132,20 @@ public class Main {
         }
 
         private static void savePublishersToFile() {
-            Map<String, Integer> publisherCounter = new HashMap<>();
+            Map<String, Integer> publisherToGameNumber = new HashMap<>();
             for(Game game: gameStorage) {
                 for(String publisher : game.getPublisher()) {
-                    publisherCounter.put(publisher, publisherCounter.getOrDefault(publisher, 0) + 1);
+                    publisherToGameNumber.put(publisher, publisherToGameNumber.getOrDefault(publisher, 0) + 1);
                 }
             }
 
-            List<Map.Entry<String,Integer>> publishers = new ArrayList<>(publisherCounter.entrySet());
+            List<Map.Entry<String,Integer>> publishers = new ArrayList<>(publisherToGameNumber.entrySet());
             publishers.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
             try {
                 Path pathToFile = Path.of("src", "main", "resources", "game_publishers.csv");
                 BufferedWriter writer = Files.newBufferedWriter(pathToFile);
-                writer.write("Publisher,Count_of_game\n");
+                writer.write("Publisher,Count_of_games\n");
                 for(Map.Entry<String,Integer> publisher : publishers) {
                     String publisherName = publisher.getKey();
                     if(publisherName.isEmpty()) {
