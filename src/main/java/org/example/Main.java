@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.games.Game;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,7 +72,7 @@ public class Main {
             //list of all game genres from the input file, sorted alphabetically and containing only unique values.
             TreeSet<String> uniqueGenre = new TreeSet<>();
             for(Game game : gameStorage) {
-                List<String> genres = game.getGenres();
+                List<String> genres = game.getGenre();
                 if(!genres.isEmpty()) {
                     genres.remove(0);
                 } else {
@@ -104,7 +106,7 @@ public class Main {
 
                 List<Game> simulatorGames = new ArrayList<>();
                 for(Game game : gameStorage) {
-                    if(game.getGenres().contains(SIMULATOR)) {
+                    if(game.getGenre().contains(SIMULATOR)) {
                         simulatorGames.add(game);
                     }
                 }

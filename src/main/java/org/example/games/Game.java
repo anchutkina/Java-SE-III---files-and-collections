@@ -1,7 +1,6 @@
-package org.example;
+package org.example.games;
 
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -9,7 +8,18 @@ public class Game {
     private String releaseDate;
     private List<String> developer;
     private List<String> publisher;
-    private List<String> genres;
+    private List<String> genre;
+
+    public Game(String name, String releaseDate, List<String> developer, List<String> publisher, List<String> genre) {
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.developer = developer;
+        this.publisher = publisher;
+        this.genre = genre;
+    }
+
+    public Game() {
+    }
 
     public String getName() {
         return name;
@@ -27,8 +37,8 @@ public class Game {
         return publisher;
     }
 
-    public List<String> getGenres() {
-        return genres;
+    public List<String> getGenre() {
+        return genre;
     }
 
     public void setName(String name) {
@@ -47,17 +57,12 @@ public class Game {
         this.publisher = publisher;
     }
 
-    public void setGenres(List<String> genres) {
-        this.genres = genres;
+    public void setGenre(List<String> genre) {
+        this.genre = genre;
     }
 
-    public Game(String name, String releaseDate, List<String> developer, List<String> publisher, List<String> genres) {
-        this.name = name;
-        this.releaseDate = releaseDate;
-        this.developer = developer;
-        this.publisher = publisher;
-        this.genres = genres;
-    }
+
+
 
     @Override
     public String toString() {
@@ -66,7 +71,7 @@ public class Game {
                 ", releaseDate=" + releaseDate +
                 ", developer='" + developer.toString() + '\'' +
                 ", publisher='" + publisher.toString() + '\'' +
-                ", genres=" + genres.toString() +
+                ", genres=" + genre.toString() +
                 '}';
     }
 
