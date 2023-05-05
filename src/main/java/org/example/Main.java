@@ -7,11 +7,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
+import java.util.logging.*;
+
 public class Main {
+
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
     private static List<Game> gameStorage = new ArrayList<>();
     private static final String COMMA = ",";
     private static final String COMMA_SPACE = ", ";
     private static final String SIMULATOR = "Simulator";
+    private static final String ERROR = "Error with input data";
 
     public static void main(String[] args) {
         gameStorage = getGameList();
@@ -21,9 +26,8 @@ public class Main {
     }
 
     private static List<Game> getGameList() {
-        try {
             Path pathToFile = Path.of("src", "main", "resources", "games.csv");
-            BufferedReader reader = Files.newBufferedReader(pathToFile);
+        try (BufferedReader reader = Files.newBufferedReader(pathToFile)) {
             String line = reader.readLine();
             while (line != null) {
                 List<String> attributes = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"));
@@ -32,7 +36,7 @@ public class Main {
                 line = reader.readLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warning(ERROR);
         }
 
         return gameStorage;
@@ -63,7 +67,7 @@ public class Main {
                 }
                 return new Game(name, date, developers, publishers, genres);
             } catch (RuntimeException r) {
-                r.printStackTrace();
+                logger.warning(ERROR);
                 return null;
             }
         }
@@ -76,16 +80,15 @@ public class Main {
                 if(!genres.isEmpty()) {
                     genres.remove(0);
                 } else {
-                    System.out.println("There are not any genres to work with.");
+                    logger.warning("There are not any genres to work with.");
                 }
 
                 uniqueGenre.addAll(genres);
             }
 
 
-            try {
-                Path pathToFile = Path.of("src", "main", "resources", "game_genres.txt");
-                FileWriter genresWriter = new FileWriter(pathToFile.toFile());
+            Path pathToFile = Path.of("src", "main", "resources", "game_genres.txt");
+            try (FileWriter genresWriter = new FileWriter(pathToFile.toFile())){
                 for(String genre : uniqueGenre) {
                     if(!genre.equals(uniqueGenre.last())) {
                         genresWriter.write(genre + COMMA);
@@ -93,11 +96,10 @@ public class Main {
                         genresWriter.write(genre);
                     }
                 }
-                genresWriter.close();
-                System.out.println("File game_genres.txt was written successfully.");
+                logger.info("File game_genres.txt was written successfully.");
 
             } catch(IOException e) {
-                e.printStackTrace();
+                logger.warning(ERROR);
             }
         }
 
@@ -117,19 +119,18 @@ public class Main {
                     }
                 });
 
-            try {
-                Path pathToFile = Path.of("src", "main", "resources", "simulator_games.csv");
-                FileWriter writer = new FileWriter(pathToFile.toFile());
+            Path pathToFile = Path.of("src", "main", "resources", "simulator_games.csv");
+            try (FileWriter writer = new FileWriter(pathToFile.toFile())){
+
                 writer.write("Name,Released Date\n");
                 for(Game game: simulatorGames) {
                     writer.write(game.getName() + COMMA + game.getReleaseDate() + "\n");
                 }
 
-                writer.close();
-                System.out.println("File simulator_games.csv was written successfully.");
+                logger.info("File simulator_games.csv was written successfully.");
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warning(ERROR);
             }
         }
 
@@ -144,9 +145,8 @@ public class Main {
             List<Map.Entry<String,Integer>> publishers = new ArrayList<>(publisherToGameNumber.entrySet());
             publishers.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
-            try {
-                Path pathToFile = Path.of("src", "main", "resources", "game_publishers.csv");
-                BufferedWriter writer = Files.newBufferedWriter(pathToFile);
+            Path pathToFile = Path.of("src", "main", "resources", "game_publishers.csv");
+            try (BufferedWriter writer = Files.newBufferedWriter(pathToFile);){
                 writer.write("Publisher,Count_of_games\n");
                 for(Map.Entry<String,Integer> publisher : publishers) {
                     String publisherName = publisher.getKey();
@@ -156,11 +156,10 @@ public class Main {
                     writer.write(publisherName + COMMA + publisher.getValue() + "\n");
                 }
 
-                writer.close();
-                System.out.println("File game_publishers.csv was written successfully.");
+                logger.info("File game_publishers.csv was written successfully.");
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warning(ERROR);
             }
 
 
