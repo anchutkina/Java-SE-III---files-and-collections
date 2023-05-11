@@ -6,16 +6,16 @@ import java.util.List;
 public class Game {
     private String name;
     private String releaseDate;
-    private List<String> developer;
-    private List<String> publisher;
-    private List<String> genre;
+    private List<String> developers;
+    private List<String> publishers;
+    private List<String> genres;
 
-    public Game(String name, String releaseDate, List<String> developer, List<String> publisher, List<String> genre) {
+    public Game(String name, String releaseDate, List<String> developers, List<String> publishers, List<String> genres) {
         this.name = name;
         this.releaseDate = releaseDate;
-        this.developer = developer;
-        this.publisher = publisher;
-        this.genre = genre;
+        this.developers = developers;
+        this.publishers = publishers;
+        this.genres = genres;
     }
 
     public Game() {
@@ -29,16 +29,16 @@ public class Game {
         return releaseDate;
     }
 
-    public List<String> getDeveloper() {
-        return developer;
+    public List<String> getDevelopers() {
+        return developers;
     }
 
-    public List<String> getPublisher() {
-        return publisher;
+    public List<String> getPublishers() {
+        return publishers;
     }
 
-    public List<String> getGenre() {
-        return genre;
+    public List<String> getGenres() {
+        return genres;
     }
 
     public void setName(String name) {
@@ -49,16 +49,16 @@ public class Game {
         this.releaseDate = releaseDate;
     }
 
-    public void setDeveloper(List<String> developer) {
-        this.developer = developer;
+    public void setDevelopers(List<String> developers) {
+        this.developers = developers;
     }
 
-    public void setPublisher(List<String> publisher) {
-        this.publisher = publisher;
+    public void setPublishers(List<String> publishers) {
+        this.publishers = publishers;
     }
 
-    public void setGenre(List<String> genre) {
-        this.genre = genre;
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
     }
 
 
@@ -69,9 +69,9 @@ public class Game {
         return "Game{" +
                 "name='" + name + '\'' +
                 ", releaseDate=" + releaseDate +
-                ", developer='" + developer.toString() + '\'' +
-                ", publisher='" + publisher.toString() + '\'' +
-                ", genres=" + genre.toString() +
+                ", developer='" + developers.toString() + '\'' +
+                ", publisher='" + publishers.toString() + '\'' +
+                ", genres=" + genres.toString() +
                 '}';
     }
 

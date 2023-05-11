@@ -23,31 +23,26 @@ class GameTest {
 
     @Test
     void testShouldReturnGameName() {
-        String result = game.getName();
-        assertEquals(NAME, result);
+        assertEquals(NAME, game.getName());
     }
 
     @Test
     void testShouldReturnGameReleaseDate() {
-        String result = game.getReleaseDate();
-        assertEquals(DATE, result);
+        assertEquals(DATE, game.getReleaseDate());
     }
 
     @Test
     void testShouldReturnGameDeveloper() {
-        List<String> result = game.getDeveloper();
-        assertEquals(DEVELOPER, result);
+        assertEquals(DEVELOPER, game.getDevelopers());
     }
 
     @Test
     void testShouldReturnGamePublisher() {
-        List<String> result = game.getPublisher();
-        assertEquals(PUBLISHER, result);
+        assertEquals(PUBLISHER, game.getPublishers());
     }
 
     @Test
     void testShouldReturnGameGenre() {
-        List<String> result = game.getGenre();
-        assertEquals(GENRE, result);
+        assertEquals(GENRE, game.getGenres());
     }
 }

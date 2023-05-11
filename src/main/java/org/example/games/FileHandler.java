@@ -12,10 +12,9 @@ public class FileHandler {
     private static final String SIMULATOR = "Simulator";
     GameMapper gameMapper = new GameMapper();
 
-    public static List<List<String>> getGamesFromFile() {
-        Path pathToFile = Path.of("src", "main", "resources", "games.csv");
+    public static List<List<String>> getGamesFromFile(Path pathToReadingFile) {
         List<List<String>> attributesList = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(pathToFile)) {
+        try (BufferedReader reader = Files.newBufferedReader(pathToReadingFile)) {
             String line = reader.readLine();
             while (line != null) {
                 List<String> attributes = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)"));
@@ -29,11 +28,10 @@ public class FileHandler {
 
     }
 
-    public void saveGenresToFile() {
-        Path pathToFile = Path.of("src", "main", "resources", "game_genres.txt");
-        try (FileWriter genresWriter = new FileWriter(pathToFile.toFile())){
-            for(String genre : getUniqueGame()) {
-                if(!genre.equals(getUniqueGame().last())) {
+    public void saveGenresToFile(Path pathToReadingFile, Path pathToWritingFile) {
+        try (FileWriter genresWriter = new FileWriter(pathToWritingFile.toFile())) {
+            for(String genre : getUniqueGame(pathToReadingFile)) {
+                if(!genre.equals(getUniqueGame(pathToReadingFile).last())) {
                     genresWriter.write(genre + GlobalConstants.COMMA);
                 } else {
                     genresWriter.write(genre);
@@ -46,13 +44,11 @@ public class FileHandler {
         }
     }
 
-    private TreeSet<String> getUniqueGame(){
+    private TreeSet<String> getUniqueGame(Path pathToReadingFile){
         TreeSet<String> uniqueGenre = new TreeSet<>();
-        for(Game game : gameMapper.mapGameToObject()) {
-            List<String> genres = game.getGenre();
-            if(!genres.isEmpty()) {
-                genres.remove(0);
-            } else {
+        for(Game game : gameMapper.mapAttributesToGameObject(pathToReadingFile)) {
+            List<String> genres = game.getGenres();
+            if(genres.isEmpty()) {
                 GlobalConstants.LOGGER.warning("There are not any genres to work with.");
             }
 
@@ -61,12 +57,11 @@ public class FileHandler {
         return uniqueGenre;
     }
 
-    public void saveSimulationGamesToFile() {
-        Path pathToFile = Path.of("src", "main", "resources", "simulator_games.csv");
-        try (FileWriter writer = new FileWriter(pathToFile.toFile())){
+    public void saveSimulatorGamesToFile(Path pathToReadingFile, Path pathToWritingFile) {
+        try (FileWriter writer = new FileWriter(pathToWritingFile.toFile())){
 
             writer.write("Name,Released Date\n");
-            for(Game game: getSimulatorGames()) {
+            for(Game game: getSimulatorGames(pathToReadingFile)) {
                 writer.write(game.getName() + GlobalConstants.COMMA + game.getReleaseDate() + "\n");
             }
 
@@ -77,10 +72,10 @@ public class FileHandler {
         }
     }
 
-    private List<Game> getSimulatorGames() {
+    private List<Game> getSimulatorGames(Path pathToReadingFile) {
         List<Game> simulatorGames = new ArrayList<>();
-        for(Game game : gameMapper.mapGameToObject()) {
-            if(game.getGenre().contains(SIMULATOR)) {
+        for(Game game : gameMapper.mapAttributesToGameObject(pathToReadingFile)) {
+            if(game.getGenres().contains(SIMULATOR)) {
                 simulatorGames.add(game);
             }
         }
@@ -93,11 +88,10 @@ public class FileHandler {
         return simulatorGames;
     }
 
-    public void savePublishersToFile() {
-        Path pathToFile = Path.of("src", "main", "resources", "game_publishers.csv");
-        try (BufferedWriter writer = Files.newBufferedWriter(pathToFile)){
+    public void savePublishersToFile(Path pathToReadingFile, Path pathToWritingFile) {
+        try (BufferedWriter writer = Files.newBufferedWriter(pathToWritingFile)){
             writer.write("Publisher,Count_of_games\n");
-            for(Map.Entry<String,Integer> publisher : getUniquePublishers()) {
+            for(Map.Entry<String,Integer> publisher : getUniquePublishers(pathToReadingFile)) {
                 String publisherName = publisher.getKey();
                 if(publisherName.isEmpty()) {
                     publisherName = "Publishers without a name";
@@ -112,10 +106,10 @@ public class FileHandler {
         }
     }
 
-    private List<Map.Entry<String,Integer>> getUniquePublishers() {
+    private List<Map.Entry<String,Integer>> getUniquePublishers(Path pathToReadingFile) {
         Map<String, Integer> publisherToGameNumber = new HashMap<>();
-        for(Game game: gameMapper.mapGameToObject()) {
-            for(String publisher : game.getPublisher()) {
+        for(Game game: gameMapper.mapAttributesToGameObject(pathToReadingFile)) {
+            for(String publisher : game.getPublishers()) {
                 publisherToGameNumber.put(publisher, publisherToGameNumber.getOrDefault(publisher, 0) + 1);
             }
         }

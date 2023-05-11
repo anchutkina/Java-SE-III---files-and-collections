@@ -2,16 +2,20 @@ package org.example.games;
 
 import org.example.GlobalConstants;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameMapper {
 
 
-    public List<Game> mapGameToObject() {
-        List<Game> gameStorage = new ArrayList<>();
+    public List<Game> mapAttributesToGameObject(Path pathToFile) {
+
         try {
-            List<List<String>> attributesList = FileHandler.getGamesFromFile();
+            List<List<String>> attributesList = FileHandler.getGamesFromFile(pathToFile);
+            List<Game> gameStorage = new ArrayList<>();
+
             for(List<String> attributes : attributesList) {
 
                 String name = attributes.get(0);
@@ -37,10 +41,11 @@ public class GameMapper {
                 Game game = new Game(name, date, developers, publishers, genres);
                 gameStorage.add(game);
             }
+            gameStorage.remove(0);
             return gameStorage;
         } catch (RuntimeException r) {
             GlobalConstants.LOGGER.warning(GlobalConstants.ERROR);
-            return null;
+            return Collections.emptyList();
         }
     }
 
