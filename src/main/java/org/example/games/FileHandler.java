@@ -9,7 +9,7 @@ import java.util.*;
 
 
 public class FileHandler {
-    private static final String SIMULATOR = "Simulator";
+
     GameMapper gameMapper = new GameMapper();
 
     public static List<List<String>> getGamesFromFile(Path pathToReadingFile) {
@@ -30,8 +30,8 @@ public class FileHandler {
 
     public void saveGenresToFile(Path pathToReadingFile, Path pathToWritingFile) {
         try (FileWriter genresWriter = new FileWriter(pathToWritingFile.toFile())) {
-            for(String genre : getUniqueGame(pathToReadingFile)) {
-                if(!genre.equals(getUniqueGame(pathToReadingFile).last())) {
+            for(String genre : getUniqueGenre(pathToReadingFile)) {
+                if(!genre.equals(getUniqueGenre(pathToReadingFile).last())) {
                     genresWriter.write(genre + GlobalConstants.COMMA);
                 } else {
                     genresWriter.write(genre);
@@ -44,7 +44,7 @@ public class FileHandler {
         }
     }
 
-    private TreeSet<String> getUniqueGame(Path pathToReadingFile){
+    private TreeSet<String> getUniqueGenre(Path pathToReadingFile){
         TreeSet<String> uniqueGenre = new TreeSet<>();
         for(Game game : gameMapper.mapAttributesToGameObject(pathToReadingFile)) {
             List<String> genres = game.getGenres();
@@ -75,7 +75,7 @@ public class FileHandler {
     private List<Game> getSimulatorGames(Path pathToReadingFile) {
         List<Game> simulatorGames = new ArrayList<>();
         for(Game game : gameMapper.mapAttributesToGameObject(pathToReadingFile)) {
-            if(game.getGenres().contains(SIMULATOR)) {
+            if(game.getGenres().contains(GlobalConstants.SIMULATOR)) {
                 simulatorGames.add(game);
             }
         }

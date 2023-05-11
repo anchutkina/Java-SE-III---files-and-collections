@@ -7,9 +7,8 @@ public class GlobalConstants {
 
     public static final String ERROR = "Error with input data";
     public static final Logger LOGGER = Logger.getLogger(GlobalConstants.class.getName());
-
+    public static final String SIMULATOR = "Simulator";
     public static final String COMMA = ",";
-
     public static final String COMMA_SPACE = ", ";
     public static final Path PATH_TO_READING_FILE = Path.of("src", "main", "resources", "games.csv");
     public static final Path PATH_TO_GAME_GENRES_FILE = Path.of("src", "main", "resources", "game_genres.txt");

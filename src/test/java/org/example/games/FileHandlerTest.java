@@ -15,12 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileHandlerTest {
     FileHandler testFileHandle;
-    GameMapper gameMapper;
 
     @BeforeEach
     void setUp() {
         testFileHandle = new FileHandler();
-        gameMapper = new GameMapper();
     }
 
     @Test
@@ -80,7 +78,7 @@ class FileHandlerTest {
     }
 
     @Test
-    void savePublishersToFile() throws IOException {
+    void testShouldSavePublishersToFile() throws IOException {
         //given
         Path testExpectedPublishersFilePath = Path.of("src", "test", "resources", "test_expected_publishers.csv");
         List<String> expectedSimulatorGames = Files.readAllLines(testExpectedPublishersFilePath);
